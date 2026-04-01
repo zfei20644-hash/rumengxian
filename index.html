@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>长安入城文牒</title>
+  <style>
+    :root{
+      --bg:#f7f2e8;
+      --bg2:#efe3cf;
+      --paper:#fffaf2;
+      --paper2:#f8efdf;
+      --ink:#34271f;
+      --sub:#6c5a4a;
+      --line:#dfcfb6;
+      --line2:#eadfce;
+      --accent:#9a4b30;
+      --accent2:#b56b4c;
+      --gold:#bb8f52;
+      --gold-soft:#eed9af;
+      --green:#4c7d56;
+      --shadow:0 20px 50px rgba(74,54,34,.10);
+      --shadow-soft:0 10px 24px rgba(74,54,34,.07);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Serif SC",serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(187,143,82,.12), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(154,75,48,.05), transparent 20%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      min-height:100vh;
+    }
+
+    .gate{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 18px;
+    }
+
+    .gate-card{
+      width:min(640px,100%);
+      background:rgba(255,250,242,.94);
+      border:1px solid rgba(154,75,48,.10);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:42px 28px 32px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .gate-card::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border:1px solid rgba(187,143,82,.14);
+      border-radius:20px;
+      pointer-events:none;
+    }
+
+    .gate-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255,255,255,.40), transparent 24%),
+        radial-gradient(circle at 80% 100%, rgba(187,143,82,.06), transparent 28%);
+      pointer-events:none;
+    }
+
+    .gate-mark{
+      width:88px;
+      height:88px;
+      border-radius:50%;
+      border:2px solid rgba(154,75,48,.28);
+      color:var(--accent);
+      margin:0 auto 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      font-weight:700;
+      letter-spacing:2px;
+      transform:rotate(-8deg);
+      position:relative;
+      background:rgba(255,255,255,.62);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .gate-mark:before{
+      content:"";
+      position:absolute;
+      inset:6px;
+      border:1px solid rgba(154,75,48,.22);
+      border-radius:50%;
+    }
+
+    .eyebrow{
+      font-size:12px;
+      letter-spacing:4px;
+      color:var(--gold);
+      margin-bottom:10px;
+    }
+
+    .gate h1{
+      margin:0 0 12px;
+      font-size:36px;
+      letter-spacing:2px;
+      line-height:1.25;
+    }
+
+    .gate p{
+      margin:0 auto 22px;
+      line-height:1.95;
+      color:var(--sub);
+      max-width:34em;
+      font-size:15px;
+    }
+
+    .name-box{
+      width:min(420px,100%);
+      margin:0 auto;
+      text-align:left;
+      position:relative;
+      z-index:1;
+    }
+
+    .name-label{
+      display:block;
+      font-size:13px;
+      color:var(--accent);
+      margin:0 0 8px 4px;
+      letter-spacing:1px;
+      font-weight:600;
+    }
+
+    .input-row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      align-items:stretch;
+    }
+
+    input{
+      flex:1 1 240px;
+      min-width:0;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fffdfa;
+      font-size:16px;
+      outline:none;
+      color:var(--ink);
+      transition:.2s ease;
+    }
+
+    input:focus{
+      border-color:var(--accent2);
+      box-shadow:0 0 0 4px rgba(181,107,76,.10);
+    }
+
+    .start-btn{
+      border:none;
+      background:var(--accent);
+      color:#fff;
+      border-radius:14px;
+      padding:14px 20px;
+      font-size:16px;
+      cursor:pointer;
+      transition:.2s ease;
+      min-width:132px;
+      font-weight:600;
+      letter-spacing:.5px;
+    }
+
+    .start-btn:hover:not(:disabled){
+      transform:translateY(-1px);
+      background:#87412a;
+    }
+
+    .start-btn:disabled{
+      background:#ccb8ab;
+      color:#fff;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    .hint-row{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      font-size:12.5px;
+      color:var(--sub);
+    }
+
+    .hint-warn{
+      color:var(--accent);
+    }
+
+    .hint-ok{
+      color:var(--green);
+    }
+
+    .tip{
+      margin-top:16px;
+      font-size:13px;
+      color:var(--sub);
+      line-height:1.8;
+    }
+
+    .stage{
+      display:none;
+      padding:24px 14px 68px;
+    }
+
+    .stage.show{
+      display:block;
+    }
+
+    .wrap{
+      max-width:920px;
+      margin:0 auto;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+      color:var(--sub);
+      font-size:13px;
+    }
+
+    .topbar-title{
+      font-weight:600;
+      color:var(--accent);
+      letter-spacing:.5px;
+    }
+
+    .topbar .mini{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .chip{
+      padding:7px 11px;
+      border-radius:999px;
+      background:rgba(255,255,255,.58);
+      border:1px solid var(--line);
+      box-shadow:0 4px 12px rgba(74,54,34,.03);
+    }
+
+    .scroll-shell{
+      position:relative;
+      padding:24px 0;
+    }
+
+    .rod{
+      height:16px;
+      border-radius:999px;
+      background:linear-gradient(180deg,#cca068,#91683c);
+      box-shadow:inset 0 1px 1px rgba(255,255,255,.32), inset 0 -2px 3px rgba(0,0,0,.16);
+      margin:0 14px;
+    }
+
+    .paper{
+      position:relative;
+      margin:-2px auto;
+      width:min(100%,860px);
+      background:
+        linear-gradient(180deg,var(--paper) 0%, var(--paper2) 100%);
+      border-left:1px solid #ebdfcf;
+      border-right:1px solid #ebdfcf;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      transform-origin:top center;
+      max-height:0;
+      opacity:0;
+      transform:scaleY(.06);
+      transition:max-height 1.1s ease, opacity .7s ease, transform 1s ease;
+    }
+
+    .paper:before{
+      content:"";
+      position:absolute;
+      inset:12px;
+      border:1px solid rgba(187,143,82,.10);
+      pointer-events:none;
+    }
+
+    .paper:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,255,255,.25), transparent 20%),
+        radial-gradient(circle at 90% 100%, rgba(187,143,82,.05), transparent 28%);
+    }
+
+    .scroll-shell.open .paper{
+      max-height:14000px;
+      opacity:1;
+      transform:scaleY(1);
+    }
+
+    .paper-inner{
+      padding:32px 22px 38px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero{
+      position:relative;
+      text-align:center;
+      padding:10px 12px 24px;
+      border-bottom:1px dashed var(--line);
+      margin-bottom:18px;
+    }
+
+    .hero small{
+      display:block;
+      color:var(--gold);
+      letter-spacing:4px;
+      margin-bottom:10px;
+      font-size:12px;
+    }
+
+    .hero h2{
+      margin:0;
+      font-size:40px;
+      letter-spacing:3px;
+      line-height:1.25;
+    }
+
+    .hero .sub{
+      margin:12px auto 0;
+      max-width:36em;
+      line-height:1.95;
+      color:var(--sub);
+      font-size:15px;
+    }
+
+    .divider{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      margin:16px auto 6px;
+      color:var(--gold);
+      font-size:13px;
+      letter-spacing:1px;
+    }
+
+    .divider:before,.divider:after{
+      content:"";
+      width:84px;
+      max-width:22vw;
+      height:1px;
+      background:linear-gradient(90deg,transparent,var(--line),transparent);
+    }
+
+    .edict-head{
+      margin:18px auto 14px;
+      display:inline-block;
+      padding:7px 14px;
+      border-radius:999px;
+      background:rgba(187,143,82,.10);
+      color:var(--accent);
+      font-size:13px;
+      letter-spacing:2px;
+    }
+
+    .welcome-box{
+      margin:8px 0 14px;
+      padding:24px 18px;
+      background:rgba(154,75,48,.05);
+      border:1px solid rgba(154,75,48,.12);
+      border-radius:18px;
+      line-height:2.08;
+      text-align:center;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .welcome-box strong{
+      color:var(--accent);
+    }
+
+    .intro-city{
+      margin:14px 0 0;
+      padding:16px 10px 0;
+      color:var(--sub);
+      line-height:1.98;
+      text-align:center;
+      font-size:15px;
+    }
+
+    .intro-city b{
+      color:var(--ink);
+    }
+
+    .stamp-area{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:10px;
+      margin-top:18px;
+      min-height:92px;
+    }
+
+    .seal-btn{
+      background:#fff;
+      color:var(--accent);
+      border:1px solid rgba(154,75,48,.2);
+      padding:12px 18px;
+      border-radius:13px;
+      font-weight:600;
+    }
+
+    .seal-btn:hover{
+      background:#fff8f5;
+    }
+
+    .seal{
+      width:96px;
+      height:96px;
+      border-radius:50%;
+      border:3px solid var(--accent);
+      color:var(--accent);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:15px;
+      font-weight:700;
+      line-height:1.35;
+      transform:rotate(-12deg) scale(.5);
+      opacity:0;
+      box-shadow:0 0 0 1px rgba(154,75,48,.14);
+      background:rgba(255,255,255,.34);
+    }
+
+    .seal.show{
+      display:flex;
+      animation:stamp .4s ease forwards;
+    }
+
+    @keyframes stamp{
+      0%{transform:rotate(-12deg) scale(1.4);opacity:0}
+      80%{transform:rotate(-12deg) scale(.94);opacity:1}
+      100%{transform:rotate(-12deg) scale(1);opacity:1}
+    }
+
+    .section{
+      margin-top:20px;
+      background:rgba(255,255,255,.52);
+      border:1px solid rgba(219,205,182,.94);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 8px 18px rgba(74,54,34,.03);
+    }
+
+    .section > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:16px 18px;
+      font-weight:700;
+      font-size:17px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      background:rgba(255,255,255,.56);
+      position:relative;
+    }
+
+    .section > summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .summary-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .summary-badge{
+      flex:0 0 auto;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(187,143,82,.14);
+      color:var(--accent);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .summary-text{
+      min-width:0;
+    }
+
+    .section > summary span{
+      color:var(--sub);
+      font-size:13px;
+      font-weight:500;
+      white-space:nowrap;
+    }
+
+    .summary-arrow{
+      flex:0 0 auto;
+      color:var(--accent);
+      font-size:14px;
+      transition:transform .2s ease;
+    }
+
+    .section[open] .summary-arrow{
+      transform:rotate(180deg);
+    }
+
+    .section[open] > summary{
+      border-bottom:1px solid var(--line);
+    }
+
+    .section-body{
+      padding:16px 18px 18px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .card,.item,.word,.cold{
+      background:#fffdfa;
+      border:1px solid var(--line2);
+      border-radius:14px;
+    }
+
+    .card{
+      padding:14px;
+    }
+
+    .card h3{
+      margin:0 0 8px;
+      font-size:16px;
+      color:var(--accent);
+    }
+
+    .card p{
+      margin:0;
+      line-height:1.92;
+      color:var(--sub);
+      font-size:14px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .item{
+      padding:12px 14px;
+    }
+
+    .item b{
+      display:block;
+      margin-bottom:6px;
+      font-size:15px;
+      color:var(--ink);
+    }
+
+    .item p{
+      margin:0;
+      line-height:1.9;
+      color:var(--sub);
+      font-size:14px;
+    }
+
+    .vocab{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .word{
+      padding:10px 12px;
+      min-width:150px;
+      flex:1 1 150px;
+    }
+
+    .word b{
+      display:block;
+      font-size:15px;
+      margin-bottom:4px;
+      color:var(--accent);
+    }
+
+    .word span{
+      color:var(--sub);
+      font-size:13px;
+      line-height:1.76;
+      display:block;
+    }
+
+    .cold-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .cold{
+      display:grid;
+      grid-template-columns:30px 1fr;
+      gap:10px;
+      padding:12px 14px;
+    }
+
+    .num{
+      color:var(--accent);
+      font-weight:700;
+      font-size:16px;
+      line-height:1.8;
+      text-align:center;
+    }
+
+    .cold div:last-child{
+      color:var(--sub);
+      line-height:1.9;
+      font-size:14px;
+    }
+
+    .task-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .task{
+      padding:12px 14px;
+      border-left:3px solid var(--gold);
+      background:#fffdfa;
+      border-radius:0 12px 12px 0;
+    }
+
+    .task b{
+      display:block;
+      margin-bottom:6px;
+      color:var(--ink);
+    }
+
+    .task{
+      color:var(--sub);
+      line-height:1.88;
+      font-size:14px;
+    }
+
+    .footer{
+      padding:34px 10px 8px;
+      text-align:center;
+      color:var(--sub);
+      font-size:14px;
+      line-height:2;
+    }
+
+    .footer-main{
+      font-size:19px;
+      color:var(--ink);
+      margin-bottom:8px;
+      font-weight:700;
+    }
+
+    .name{
+      color:var(--accent);
+    }
+
+    @media (max-width:680px){
+      .gate h1{font-size:30px}
+      .hero h2{font-size:31px}
+      .grid{grid-template-columns:1fr}
+      .topbar{display:block}
+      .topbar .mini{margin-top:8px;justify-content:flex-start}
+      .paper-inner{padding:24px 14px 30px}
+      .divider:before,.divider:after{width:48px}
+      .stamp-area{justify-content:center}
+      .section > summary{align-items:flex-start}
+      .section > summary span{white-space:normal;text-align:right}
+    }
+  </style>
+</head>
+<body>
+  <section class="gate" id="gate">
+    <div class="gate-card">
+      <div class="gate-mark">入关<br>文牒</div>
+      <div class="eyebrow">入 梦 长 安 · 行 前 阅 读</div>
+      <h1>领取你的长安入城文牒</h1>
+      <p>请输入营员姓名，领取一份专属的长安文牒。</p>
+
+      <div class="name-box">
+        <label class="name-label" for="camperName">营员姓名</label>
+        <div class="input-row">
+          <input id="camperName" maxlength="12" placeholder="请输入营员姓名" />
+          <button class="start-btn" id="startBtn" disabled>开启文牒</button>
+        </div>
+        <div class="hint-row">
+          <div id="nameHint" class="hint-warn">入梦长安</div>
+        </div>
+      </div>
+
+      <div class="tip">建议让孩子在出发前，先完成这场小小的入城仪式。</div>
+    </div>
+  </section>
+
+  <main class="stage" id="stage">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="topbar-title">入梦长安 · 出发前的入城仪式</div>
+        <div class="mini">
+          <div class="chip">专属营员：<span id="topName">小营员</span></div>
+          <div class="chip">建议阅读时间：5—8分钟</div>
+        </div>
+      </div>
+
+      <div class="scroll-shell" id="scrollShell">
+        <div class="rod"></div>
+
+        <div class="paper" id="paper">
+          <div class="paper-inner">
+            <section class="hero">
+              <small>长安入城文牒</small>
+              <h2>欢迎 <span class="name" id="heroName">小营员</span> 来到西安</h2>
+              <div class="divider">启卷</div>
+              <p class="sub">读完它，然后带着更清楚的问题，走进这座千年古都，开始长安之行。</p>
+
+              <div class="edict-head">奉 <span class="name" id="welcomeName">小营员</span> 启</div>
+
+              <div class="welcome-box">
+                <strong id="welcomeNameInline">小营员</strong>，欢迎你来到西安。<br>
+                从明天起，你将走进一座把周、秦、汉、唐层层叠放在一起的城市。<br>
+                这里有大雁塔的钟声，有碑林的笔意，有兵马俑的沉默，也有书院门的墨香与灯火长安的热闹。<br>
+                愿你带着<strong>好奇</strong>出发，带着<strong>敬意</strong>看历史，带着<strong>问题</strong>去发现：<br>
+                为什么西安能成为十三朝古都，为什么中国历史到了这里，会一下子变得格外清晰。
+              </div>
+
+              <div class="intro-city">
+                <b>西安</b>，古称长安。这里是中国古代最重要的都城之一，也是很多孩子第一次认真看见华夏根脉的地方。<br>
+                在这里，你会同时遇见帝国、文字、佛塔、石刻、戏曲和城市生活。它不是只讲一个朝代，而是在一座城里，把很长的中国历史慢慢铺展开来。
+              </div>
+
+              <div class="stamp-area">
+                <button class="seal-btn" id="sealBtn">加盖长安印</button>
+                <div class="seal" id="seal">准予入城<br><span id="sealName">小营员</span></div>
+              </div>
+            </section>
+
+            <details class="section" open>
+              <summary>
+                <div class="summary-left">
+                  <div class="summary-badge">问</div>
+                  <div class="summary-text">先带着这 5 个问题出发</div>
+                </div>
+                <span>出发前先想一想</span>
+                <div class="summary-arrow">⌄</div>
+              </summary>
+              <div class="section-body task-list">
+                <div class="task"><b>1. 为什么西安会成为十三朝古都？</b>想一想：一座城要成为都城，更需要地理位置、资源条件，还是政治力量？</div>
+                <div class="task"><b>2. 兵马俑为什么会震撼全世界？</b>它打动人的地方，只是规模大吗，还是因为它让我们第一次这么近地看到两千年前的国家组织能力？</div>
+                <div class="task"><b>3. 大雁塔和玄奘之间是什么关系？</b>一座塔为什么会成为理解唐代文化开放与中外交流的重要入口？</div>
+                <div class="task"><b>4. 为什么说碑林像一部中国书法史？</b>同样是汉字，为什么不同书法家写出来的气质会完全不同？</div>
+                <div class="task"><b>5. 西安为什么总让人觉得“厚重”？</b>是因为这里留下的朝代太多，还是因为历史、建筑、文字、宗教和日常生活都叠在了一起？</div>
+              </div>
+            </details>
+
+            <details class="section" open>
+              <summary>
+                <div class="summary-left">
+                  <div class="summary-badge">知</div>
+                  <div class="summary-text">长安预习知识 · 先认识这座城</div>
+                </div>
+                <span>入城前先把这座城放进心里</span>
+                <div class="summary-arrow">⌄</div>
+              </summary>
+              <div class="section-body">
+                <div class="grid">
+                  <div class="card">
+                    <h3>① 西安为什么重要</h3>
+                    <p>西安，古称长安，是中国历史上最重要的都城之一。周、秦、汉、隋、唐等多个重要时代都和这里有关。它不是只属于某一个朝代的城市，而是一座把中国古代政治、文化、交流与城市文明层层叠加起来的地方。</p>
+                  </div>
+                  <div class="card">
+                    <h3>② 来西安，到底在看什么</h3>
+                    <p>来西安，不只是看景点，而是在一座真实城市里读中国历史。你会看到帝国怎样建立，文字怎样统一，佛教怎样传播，书法怎样留下来，一座古都又怎样在今天继续生活。西安最特别的地方，就是历史并没有离开，它还在城市里。</p>
+                  </div>
+                </div>
+
+                <div class="list" style="margin-top:12px">
+                  <div class="item">
+                    <b>一条先记住的历史线</b>
+                    <p><b>西周</b>在镐京奠定礼乐文明；<b>秦</b>完成统一，建立中央集权国家；<b>汉</b>让长安成为丝绸之路的重要起点；<b>隋唐</b>把长安推向世界性大都市的高峰。去西安，不是在看零散的知识点，而是在看一条很长的中国历史线怎样在一座城里展开。</p>
+                  </div>
+
+                  <div class="item">
+                    <b>三个人，先认识</b>
+                    <p><b>秦始皇</b>让中国第一次完成大一统；<b>玄奘</b>从长安出发西行取经，把更广阔的世界带回中国；<b>颜真卿</b>让汉字拥有了更有力量的书法面貌。理解这三个人，也是在理解西安的三种气质：国家、交流、文化。</p>
+                  </div>
+
+                  <div class="item">
+                    <b>你会遇见的重点地方</b>
+                    <p><b>大雁塔</b>看玄奘与盛唐气象；<b>西安碑林博物院</b>看中国书法怎样被刻进石头里；<b>书院门</b>看文人气与笔墨香；<b>西安博物院与小雁塔</b>看古都厚度；<b>秦始皇帝陵博物院</b>看大秦帝国的规模、秩序与工艺；<b>易俗社</b>看秦腔与戏曲传统；<b>大唐不夜城</b>看长安文化怎样活到今天。</p>
+                  </div>
+
+                  <div class="item">
+                    <b>为什么西安总让人觉得“厚重”</b>
+                    <p>因为这里留下来的，不只是几处古迹，而是很多层历史同时存在。你能在同一座城里遇见帝王陵墓、佛塔、石碑、城墙、戏曲、书院街巷和今天的城市生活。西安的厚重，不只是年代久，而是它把很多时代都留在了眼前。</p>
+                  </div>
+
+                  <div class="item">
+                    <b>先带着这三个角度去看西安</b>
+                    <p>第一，看它怎样成为都城；第二，看它怎样保存文化；第三，看它怎样把古老的历史继续留在今天。只要带着这三个角度出发，走到每个地方时，你都会更容易知道自己在看什么。</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="section" open>
+              <summary>
+                <div class="summary-left">
+                  <div class="summary-badge">词</div>
+                  <div class="summary-text">入城词汇卡</div>
+                </div>
+                <span>这些词先认识</span>
+                <div class="summary-arrow">⌄</div>
+              </summary>
+              <div class="section-body vocab">
+                <div class="word"><b>长安</b><span>西安古称。这个名字本身就带着“长治久安”的理想。</span></div>
+                <div class="word"><b>都城</b><span>一个王朝的政治中心。看都城，不只是看宫殿，更是看制度、秩序和城市布局。</span></div>
+                <div class="word"><b>兵马俑</b><span>秦始皇陵陪葬陶俑群。它让我们看见两千年前军阵、工艺和国家组织能力。</span></div>
+                <div class="word"><b>小篆</b><span>秦统一后推行的标准字体之一。整齐、圆转、庄重，是秦代文字统一的重要象征。</span></div>
+                <div class="word"><b>碑林</b><span>大量石碑集中保存的地方。西安碑林像一座用石头写成的书法史博物馆。</span></div>
+                <div class="word"><b>书院门</b><span>西安有代表性的文化街区，能看到笔墨纸砚、拓片、书画等传统文脉。</span></div>
+                <div class="word"><b>佛塔</b><span>与佛教传播有关的建筑。大雁塔、小雁塔都是理解唐代宗教与建筑的重要入口。</span></div>
+                <div class="word"><b>秦腔</b><span>中国古老戏曲剧种之一，声音高亢、情绪饱满，是西北文化很有力量的表达。</span></div>
+              </div>
+            </details>
+
+            <details class="section" open>
+              <summary>
+                <div class="summary-left">
+                  <div class="summary-badge">趣</div>
+                  <div class="summary-text">西安冷知识</div>
+                </div>
+                <span>先知道几件有意思的小事</span>
+                <div class="summary-arrow">⌄</div>
+              </summary>
+              <div class="section-body cold-list">
+                <div class="cold">
+                  <div class="num">1</div>
+                  <div>西安不是只叫过“长安”。在不同历史阶段，这片土地和周边都出现过镐京、咸阳、大兴城、长安等名字。换句话说，今天的西安，其实像是很多座古城慢慢叠在一起形成的。</div>
+                </div>
+                <div class="cold">
+                  <div class="num">2</div>
+                  <div>兵马俑刚出土时，很多人以为它们天生就是灰色的。其实不少兵马俑最初带着鲜艳彩绘，只是颜色在出土后很快氧化脱落，所以我们今天看到的大多是素色模样。</div>
+                </div>
+                <div class="cold">
+                  <div class="num">3</div>
+                  <div>大雁塔不是一开始就完全长成今天这个样子的。它在漫长岁月里经历过修建和变化，所以你现在看到的，不只是唐代留下来的一座塔，也是它和西安一起走过时间后的样子。</div>
+                </div>
+                <div class="cold">
+                  <div class="num">4</div>
+                  <div>西安的钟楼和鼓楼以前不是为了拍照打卡建的，而是真正承担过报时功能。钟声和鼓声，曾经影响着整座城市一天的节奏。</div>
+                </div>
+                <div class="cold">
+                  <div class="num">5</div>
+                  <div>在西安修地铁、修道路、做工程时，碰到古代遗迹并不算特别稀奇。因为这座城市地下埋着很多历史，一动土，有时就会碰见过去留下来的痕迹。</div>
+                </div>
+                <div class="cold">
+                  <div class="num">6</div>
+                  <div>很多人觉得西安最特别的地方，是“历史感”和“烟火气”离得很近。可能刚看完千年古塔，转个弯就进了热闹街巷；刚从博物馆出来，又能闻到面食和炭火的香味。这种感觉，正是西安很迷人的地方。</div>
+                </div>
+              </div>
+            </details>
+
+            <details class="section">
+              <summary>
+                <div class="summary-left">
+                  <div class="summary-badge">行</div>
+                  <div class="summary-text">到西安后，你可以做的小任务</div>
+                </div>
+                <span>边走边观察</span>
+                <div class="summary-arrow">⌄</div>
+              </summary>
+              <div class="section-body task-list">
+                <div class="task"><b>任务一｜在大雁塔前想一想</b>如果玄奘没有西行，长安还会是你今天理解的那个长安吗？</div>
+                <div class="task"><b>任务二｜在碑林里找一块你最喜欢的字碑</b>说说你喜欢的是字形、力量感，还是它背后那个人的气质。</div>
+                <div class="task"><b>任务三｜在兵马俑前观察细节</b>试着找到两个你觉得“不一样”的俑，看看哪里不同。</div>
+                <div class="task"><b>任务四｜在书院门闻一闻、看一看</b>墨香、纸张、拓片和店铺陈设，会让你更懂“文化不是只在课本里”。</div>
+                <div class="task"><b>任务五｜在大唐不夜城感受今天的长安</b>想一想：为什么一座古都到了今天，仍然可以这么有活力？</div>
+              </div>
+            </details>
+
+            <details class="section">
+              <summary>
+                <div class="summary-left">
+                  <div class="summary-badge">备</div>
+                  <div class="summary-text">出发前的小提醒</div>
+                </div>
+                <span>这也很重要</span>
+                <div class="summary-arrow">⌄</div>
+              </summary>
+              <div class="section-body list">
+                <div class="item"><b>先带着好奇去</b><p>西安适合慢慢看。多问一句“为什么”，常常比多拍几张照片更有收获。</p></div>
+                <div class="item"><b>记得尊重文物和场馆</b><p>不触摸、不追跑、不大声喧哗。真正的研学，先从尊重开始。</p></div>
+                <div class="item"><b>晚上早点休息</b><p>这趟行程，需要足够的精力去看细节。好状态，会让你看到更多。</p></div>
+                <div class="item"><b>准备一本小记录本</b><p>把你最喜欢的一件文物、一个问题、一句印象深刻的话记下来，回家后会很有意义。</p></div>
+              </div>
+            </details>
+
+            <div class="footer">
+              <div class="footer-main"><span class="name" id="footerName">小营员</span>，文牒已启，准予入长安。</div>
+              <div></div>
+              <div>期待在长安与你相遇</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rod"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const gate = document.getElementById('gate');
+    const stage = document.getElementById('stage');
+    const input = document.getElementById('camperName');
+    const startBtn = document.getElementById('startBtn');
+    const nameHint = document.getElementById('nameHint');
+    const scrollShell = document.getElementById('scrollShell');
+    const sealBtn = document.getElementById('sealBtn');
+    const seal = document.getElementById('seal');
+
+    const nameTargets = [
+      'topName',
+      'heroName',
+      'welcomeName',
+      'welcomeNameInline',
+      'sealName',
+      'footerName'
+    ];
+
+    function setName(name) {
+      nameTargets.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = name;
+      });
+    }
+
+    function updateButtonState() {
+      const value = input.value.trim();
+      const hasName = value.length > 0;
+
+      startBtn.disabled = !hasName;
+      nameHint.textContent = hasName
+        ? '名字已填写，可以开启文牒'
+        : '';
+      nameHint.className = hasName ? 'hint-ok' : 'hint-warn';
+    }
+
+    function start() {
+      const name = input.value.trim();
+
+      if (!name) {
+        updateButtonState();
+        input.focus();
+        return;
+      }
+
+      setName(name);
+
+      gate.style.display = 'none';
+      stage.classList.add('show');
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      setTimeout(() => {
+        scrollShell.classList.add('open');
+      }, 180);
+    }
+
+    // 页面打开时强制清空，不回填旧名字
+    input.value = '';
+    updateButtonState();
+
+    input.addEventListener('input', updateButtonState);
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !startBtn.disabled) {
+        start();
+      }
+    });
+
+    startBtn.addEventListener('click', start);
+
+    sealBtn.addEventListener('click', () => {
+      seal.classList.remove('show');
+      void seal.offsetWidth;
+      seal.classList.add('show');
+    });
+  </script>
+</body>
+</html>
